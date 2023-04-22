@@ -7,6 +7,10 @@ in Cyber Exposure or Vulnerability Management.
     *** Use of this tool is subject to the terms and conditions identified below,
      and is not subject to any license agreement you may have with Tenable ***
 
+### Installing IVAN
+
+    pip install ivan-pro
+
 ### Authenticating to Tenable Security Center
 
     ivan keys --a <your access key or username> --s <your secret key or password> --h <ipaddresss or FQDN>

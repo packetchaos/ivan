@@ -17,8 +17,9 @@ def tenb_connection():
             access_key = row[0]
             secret_key = row[1]
             hostname = row[2]
+            port = row[3]
             sc = TenableSC(hostname)
             # login to SC
-            #sc.login(access_key=access_key, secret_key=secret_key)
+            sc.login(access_key=access_key, secret_key=secret_key, port=port)
 
-            return sc, access_key, secret_key
+            return sc

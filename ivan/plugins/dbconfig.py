@@ -7,7 +7,8 @@ def create_keys_table():
     key_table = """CREATE TABLE IF NOT EXISTS keys (
                             access_key text,
                             secret_key text,
-                            hostname text
+                            hostname text,
+                            port text
                             );"""
     create_table(key_conn, key_table)
 

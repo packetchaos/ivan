@@ -9,7 +9,8 @@ from .dbconfig import create_keys_table, create_vulns_table
 @click.option("--access_key", "--a", default="", help="Provide your Access Key")
 @click.option("--secret_key", "--s", default="", help="Provide your Secret Key")
 @click.option("--hostname", "--h", default="", help="Provide the Security Center IP")
-def keys(clear, access_key, secret_key, hostname):
+@click.option("--port", "--p", default="", help="Provide your Port")
+def keys(clear, access_key, secret_key, hostname, port):
     # create all Tables when keys are added.
     create_keys_table()
     create_vulns_table()
@@ -20,16 +21,18 @@ def keys(clear, access_key, secret_key, hostname):
             access_key = input("Please provide your Access Key : ")
             secret_key = input("Please provide your Secret Key : ")
             hostname = input("Please provide the IP address of Security Center : ")
+            port = input("Please enter you port : ")
         else:
             access_key = getpass.getpass("Please provide your Access Key : ")
             secret_key = getpass.getpass("Please provide your Secret Key : ")
             hostname = getpass.getpass("Please provide the IP address of Security Center :")
+            port = input("Please enter you port : ")
 
-    key_dict = (access_key, secret_key, hostname)
+    key_dict = (access_key, secret_key, hostname, port)
     database = r"ivan.db"
     conn = new_db_connection(database)
 
     with conn:
-        sql = '''INSERT or IGNORE into keys(access_key, secret_key, hostname) VALUES(?,?,?)'''
+        sql = '''INSERT or IGNORE into keys(access_key, secret_key, hostname, port) VALUES(?,?,?,?)'''
         cur = conn.cursor()
         cur.execute(sql, key_dict)

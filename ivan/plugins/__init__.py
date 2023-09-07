@@ -4,6 +4,7 @@ from .find import find
 from .ip import ip
 from .display import display
 from .export import export
+from .scan import scan
 
 
 def plugin_loader(group):
@@ -13,3 +14,4 @@ def plugin_loader(group):
     group.add_command(ip)
     group.add_command(display)
     group.add_command(export)
+    group.add_command(scan)

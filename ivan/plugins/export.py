@@ -2,7 +2,7 @@ import click
 from .query_export import query_export
 
 
-@click.group(help="Export Tenable.io Data")
+@click.group(help="Export Tenable.sc Data")
 def export():
     pass
 

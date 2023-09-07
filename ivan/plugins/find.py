@@ -30,18 +30,18 @@ def plugin(plugin_id, o):
         exit()
     else:
         if o != "":
-            click.echo("\n{:8s} {:16s} {:46s}".format("Plugin", "IP Address", "FQDN", "Repo Name", "Repo ID"))
+            click.echo("\n{:8s} {:16s} {:46s} {:46} {}".format("Plugin", "IP Address", "FQDN", "Repo Name", "Repo ID"))
             click.echo("-" * 150)
 
-            plugin_data = db_query("SELECT asset_ip, asset_uuid, asset_hostname, repo_name, repo_id from vulns where plugin_id='{}' and output LIKE '%{}%';".format(plugin_id,o))
+            plugin_data = db_query("SELECT asset_ip, asset_uuid, asset_hostname, repo_name, repo_id from vulns where plugin_id='{}' and output LIKE '%{}%';".format(plugin_id, o))
 
             for row in plugin_data:
                 try:
                     fqdn = row[2]
                 except:
                     fqdn = " "
-                click.echo("{:8s} {:16s} {:46s {:46} {}".format(str(plugin_id), row[0], textwrap.shorten(fqdn, 46), row[3], row[4]))
-
+                click.echo("{:8s} {:16s} {:46s} {:46} {}".format(str(plugin_id), row[0], textwrap.shorten(fqdn, 46), row[3], row[4]))
+            click.echo()
         else:
             find_by_plugin(plugin_id)
 
@@ -60,14 +60,14 @@ def cve(cve_id):
         click.echo("\n{:8s} {:16s} {:46s} {:46} {}".format("Plugin", "IP Address", "FQDN", "Repo Name", "Repo ID"))
         click.echo("-" * 150)
 
-        plugin_data = db_query("SELECT asset_ip, asset_uuid, asset_hostname where cves LIKE '%{}%';".format(cve_id))
+        plugin_data = db_query("SELECT asset_ip, asset_uuid, asset_hostname, plugin_id, repo_name, repo_id where cves LIKE '%{}%';".format(cve_id))
 
         for row in plugin_data:
             try:
                 fqdn = row[2]
             except:
                 fqdn = " "
-            click.echo("{:8s} {:16s} {:46s} {:46} {}".format(row[3], row[0], textwrap.shorten(fqdn, 46), row[3], row[4]))
+            click.echo("{:8s} {:16s} {:46s} {:46} {}".format(row[3], row[0], textwrap.shorten(fqdn, 46), row[4], row[5]))
 
         click.echo()
 
@@ -82,10 +82,10 @@ def exploit():
 
     for row in plugin_data:
         try:
-            fqdn = row[2]
+            fqdn = row[1]
         except:
             fqdn = " "
-        click.echo("{:8s} {:16s} {:46s} {:46} {}".format(row[3], row[0], textwrap.shorten(fqdn, 46), row[3], row[4]))
+        click.echo("{:8s} {:16s} {:46s} {:46} {}".format(row[2], row[0], textwrap.shorten(fqdn, 46), row[3], row[4]))
 
     click.echo()
 
@@ -104,7 +104,7 @@ def output(out_put):
             fqdn = row[2]
         except:
             fqdn = " "
-        click.echo("{:8s} {:16s} {:46s} {:46} {}".format(row[4], row[0], textwrap.shorten(fqdn, 46), row[3], row[4]))
+        click.echo("{:8s} {:16s} {:46s} {:46} {}".format(row[3], row[0], textwrap.shorten(fqdn, 46), row[4], row[5]))
 
     click.echo()
 
@@ -133,30 +133,33 @@ def scantime(minute):
         click.echo("\n{:8s} {:16s} {:46s} {:46} {}".format("Plugin", "IP Address", "FQDN", "Repo Name", "Repo ID"))
         click.echo("-" * 150)
         for vulns in data:
-
+            plugin_dict={}
             plugin_output = vulns[5]
 
             # split the output by return
             parsed_output = plugin_output.split("\n")
 
-            # grab the length so we can grab the seconds
-            length = len(parsed_output)
+            for info_line in parsed_output:
 
-            # grab the scan duration- second to the last variable
-            duration = parsed_output[length - 2]
+                try:
+                    new_split = info_line.split(" : ")
+                    plugin_dict[new_split[0]] = new_split[1]
 
-            # Split at the colon to grab the numerical value
-            seconds = duration.split(" : ")
+                except:
+                    pass
+            try:
+                intial_seconds = plugin_dict['Scan duration']
+            except KeyError:
+                intial_seconds = 'unknown'
 
-            # split to remove "secs"
-            number = seconds[1].split(" ")
-
-            # grab the number for our minute calculation
-            final_number = number[0]
-
-            if final_number != 'unknown':
-                # convert seconds into minutes
-                minutes = int(final_number) / 60
+            # For an unknown reason, the scanner will print unknown for some assets leaving no way to calculate the time.
+            if intial_seconds != 'unknown':
+                # Numerical value in seconds parsed from the plugin
+                try:
+                    seconds = int(intial_seconds[:-3])
+                    minutes = seconds / 60
+                except ValueError:
+                    minutes = 0
 
                 # grab assets that match the criteria
                 if minutes > int(minute):

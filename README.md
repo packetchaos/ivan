@@ -16,7 +16,7 @@ in Cyber Exposure or Vulnerability Management.
     ivan keys --a <your access key or username> --s <your secret key or password> --h <ipaddresss or FQDN>
 
 ### Are my Keys inputted correctly?
-In different terminals it can be a challenge to copy the keys to navi since you can not be sure it copied correctly.  
+In different terminals it can be a challenge to copy the keys to ivan since you can not be sure it copied correctly.
 
 Use the below commands to check your keys
     

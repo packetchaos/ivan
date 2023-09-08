@@ -9,7 +9,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='ivan pro',
-    version='0.0.2',
+    version='1.0.1',
     description="A command-line interface to Tenable Security Center",
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -17,7 +17,7 @@ setup(
     author_email="itprofguru@gmail.com",
     url="https://github.com/packetchaos/ivan",
     license="GNUv3",
-    keywords='tenable securitycenter navi tsc, automation',
+    keywords='tenable securitycenter ivan tsc, automation',
     packages=find_packages(exclude=['docs', 'tests']),
     classifiers=[
         "Programming Language :: Python :: 3",

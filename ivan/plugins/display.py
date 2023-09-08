@@ -4,6 +4,7 @@ import textwrap
 from tenable.sc import TenableSC
 import arrow
 
+
 def compare_dates(given_date):
     today = arrow.now()
     try:

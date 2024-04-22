@@ -20,7 +20,7 @@ def evaluate_a_scan():
                "Run a navi update command to refresh the database.\n")
     click.echo("*" * 100)
     # Pull all 19506 Plugins from the DB
-    plugin_data = db_query("select asset_uuid, output from vulns where plugin_id='19506';")
+    plugin_data = db_query("select asset_ip, asset_uuid, output from vulns where plugin_id='19506';")
 
     # Set some dicts for organizing Data
     scan_policy_dict = {}
@@ -31,7 +31,7 @@ def evaluate_a_scan():
     with open('evaluate.csv', mode='w', encoding='utf-8', newline="") as csv_file:
         agent_writer = csv.writer(csv_file, delimiter=',', quotechar='"')
 
-        header_list = ["asset uuid", "Scan Name", "Scan Policy", "Scanner IP", "Scan Time", "Max Checks", "Max Hosts", "Minutes", "RTT", "Hop Count"]
+        header_list = ["Asset IP Address", "Asset UUID", "Scan Name", "Scan Policy", "Scanner IP", "Scan Time", "Max Checks", "Max Hosts", "Minutes", "RTT", "Hop Count"]
 
         # Write the header to the csv
         agent_writer.writerow(header_list)
@@ -69,8 +69,8 @@ def evaluate_a_scan():
         for vulns in plugin_data:
             plugin_dict = {}
 
-            # Output is the second item in the tuple from the DB
-            plugin_output = vulns[1]
+            # Output is the third item in the tuple from the DB
+            plugin_output = vulns[2]
 
             # split the output by return
             parsed_output = plugin_output.split("\n")

@@ -43,35 +43,6 @@ def db_query(statement):
     return data
 
 
-def insert_assets(conn, assets):
-    sql = '''INSERT or IGNORE into assets(
-                                          ip_address, 
-                                          hostname, 
-                                          fqdn, 
-                                          uuid, 
-                                          first_found, 
-                                          last_found, 
-                                          operating_system,
-                                          mac_address, 
-                                          agent_uuid, 
-                                          last_licensed_scan_date, 
-                                          network, 
-                                          acr, 
-                                          aes, 
-                                          aws_id,
-                                          aws_ec2_instance_state,
-                                          aws_ec2_name,
-                                          aws_ec2_region,
-                                          aws_availability_zone,
-                                          gcp_instance_id,
-                                          gcp_project_id,
-                                          gcp_zone,
-                                          url) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'''
-    cur = conn.cursor()
-    cur.execute('pragma journal_mode=wal;')
-    cur.execute(sql, assets)
-
-
 def drop_tables(conn, table):
     try:
         drop_table = '''DROP TABLE {}'''.format(table)

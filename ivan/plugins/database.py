@@ -90,3 +90,41 @@ def insert_vulns(conn, vulns):
     cur.execute('pragma journal_mode=wal;')
     cur.execute(sql, vulns)
 
+
+def insert_scanid(conn, scanid):
+    sql = '''INSERT or IGNORE into scanid(
+                            asset_ip, 
+                            asset_uuid, 
+                            asset_hostname, 
+                            first_found, 
+                            last_found, 
+                            output, 
+                            plugin_id, 
+                            plugin_name, 
+                            plugin_family, 
+                            port, 
+                            protocol, 
+                            severity,
+                            repo_name,
+                            repo_id,
+                            uniqueness,
+                            cves,
+                            score,
+                            exploit,
+                            xrefs,
+                            synopsis, 
+                            see_also,
+                            solution,
+                            version, 
+                            description, 
+                            cvss3_base_score,
+                            cvss3_temporal_score,
+                            cvss_base_score,
+                            cvss_temporal_score,
+                            OSes
+    ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'''
+
+    cur = conn.cursor()
+    cur.execute('pragma journal_mode=wal;')
+    cur.execute(sql, scanid)
+

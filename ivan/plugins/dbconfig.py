@@ -64,121 +64,43 @@ def create_vulns_table():
     create_table(vuln_conn, vuln_table)
 
 
-def create_assets_table():
+def create_scanid_table():
     database = r"ivan.db"
-    asset_conn = new_db_connection(database)
-    create_asset_table = """CREATE TABLE IF NOT EXISTS assets (
-                            ip_address text,
-                            hostname text,
-                            fqdn text,
-                            uuid text PRIMARY KEY,
-                            first_found text,
+    scanid_conn = new_db_connection(database)
+    scanid_table = """CREATE TABLE IF NOT EXISTS scanid (
+                            asset_ip text, 
+                            asset_uuid text, 
+                            asset_hostname text, 
+                            first_found text, 
                             last_found text, 
-                            operating_system text,
-                            mac_address text, 
-                            agent_uuid text,
-                            last_licensed_scan_date text,
-                            network text,
-                            acr text,
-                            aes text,
-                            aws_id text,
-                            aws_ec2_instance_state text,
-                            aws_ec2_name text,
-                            aws_ec2_region text,
-                            aws_availability_zone text,
-                            gcp_instance_id text,
-                            gcp_project_id text,
-                            gcp_zone text,
-                            url text
-                            );"""
-    asset_conn.execute('pragma journal_mode=wal;')
-    create_table(asset_conn, create_asset_table)
-
-
-def create_tag_table():
-    database = r"ivan.db"
-    tag_conn = new_db_connection(database)
-    create_tags_table = """CREATE TABLE IF NOT EXISTS tags (
-                        tag_id integer PRIMARY KEY,
-                        asset_uuid text,
-                        asset_ip,
-                        tag_key text,
-                        tag_uuid text,
-                        tag_value text,
-                        tag_added_date text
-                        );"""
-    tag_conn.execute('pragma journal_mode=wal;')
-    create_table(tag_conn, create_tags_table)
-
-
-def create_apps_table():
-    database = r"ivan.db"
-    app_conn = new_db_connection(database)
-    create_apps = """CREATE TABLE IF NOT EXISTS apps (
-                            name text,
-                            uuid text PRIMARY KEY, 
-                            target text, 
-                            scan_completed_time text,
-                            pages_crawled text,
-                            requests_made text, 
-                            critical_count text,
-                            high_count text,
-                            medium_count text,
-                            low_count text, 
-                            info_count text,
-                            owasp text,
-                            tech_list text,
-                            config_id text,
-                            notes text,
-                            asset_uuid text
-                            );"""
-    app_conn.execute('pragma journal_mode=wal;')
-
-    create_table(app_conn, create_apps)
-
-
-def create_compliance_table():
-    database = r"ivan.db"
-    compliance_conn = new_db_connection(database)
-    create_compliance = """CREATE TABLE IF NOT EXISTS compliance (
-                            asset_uuid text,
-                            actual_value text,
-                            audit_file text,
-                            check_id text,
-                            check_info text,
-                            check_name text,
-                            expected_value text,
-                            first_seen text,
-                            last_seen text,
-                            plugin_id text,
-                            reference text,
-                            see_also text,
-                            solution text,
-                            status text 
-                            );"""
-
-    create_table(compliance_conn, create_compliance)
-
-
-def create_fixed_table():
-    database = r"ivan.db"
-    fixed_conn = new_db_connection(database)
-    fixed_table = """CREATE TABLE IF NOT EXISTS fixed (
-                            asset_uuid text,  
                             output text, 
                             plugin_id text, 
-                            plugin_name text,  
-                            port text,
-                            first_found text,
-                            last_fixed text,
-                            last_found text,
-                            severity text,
-                            delta text,
-                            pass_fail text,
-                            state text,
-                            special_url text
+                            plugin_name text, 
+                            plugin_family text, 
+                            port text, 
+                            protocol text, 
+                            severity text, 
+                            repo_name text, 
+                            repo_id text, 
+                            uniqueness text, 
+                            cves text,
+                            score text,
+                            exploit text,
+                            xrefs text,
+                            synopsis text, 
+                            see_also text,
+                            solution text,
+                            version text, 
+                            description text, 
+                            cvss3_base_score text,
+                            cvss3_temporal_score text,
+                            cvss_base_score text,
+                            cvss_temporal_score text,
+                            OSes text,
+                            url text
                             );"""
-    fixed_conn.execute(fixed_table)
+    scanid_conn.execute('pragma journal_mode=wal;')
+    create_table(scanid_conn, scanid_table)
 
 
 def create_plugins_table():

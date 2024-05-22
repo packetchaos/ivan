@@ -111,3 +111,28 @@ def assets():
         click.echo("\nTotal: {}\n\n".format(len(asset_list)))
     except AttributeError:
         click.echo("\nCheck your permissions or your API keys\n")
+
+
+@display.command(help="Display Scans")
+def instance():
+    sc = tenb_connection()
+    try:
+        click.echo("\n{:60s} {:10s} {:15s} {:20s} {:20s} {}".format("Scan Name", "Scan ID", "Status",
+                                                                    "Start Time", "Finish Time", "Assets Scanned"))
+        click.echo("-" * 150)
+        usable_list = []
+        for scan in sc.scan_instances.list()['usable']:
+            usable_list.append(scan['id'])
+
+        for scanid in usable_list:
+            scan = sc.scan_instances.details(id=scanid)
+            try:
+                click.echo("{:60s} {:10s} {:15s} {:20s} {:20s} {}".format(str(scan['name']), str(scan['id']),
+                                                            str(scan['status']), str(scan['startTime']),
+                                                            str(scan['finishTime']), str(scan['progress']['scannedSize'])))
+            except KeyError:
+                click.echo("{:60s} {:10s} {:30s} {}".format(str(scan['name']), str(scan['id']), str(scan['status']),
+                                                            "No UUID"))
+        click.echo()
+    except AttributeError:
+        click.echo("\nCheck your permissions or your API keys\n")

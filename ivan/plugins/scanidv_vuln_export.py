@@ -2,8 +2,8 @@ import time
 import click
 from tenable.sc import TenableSC
 from sqlite3 import Error
-from .database import new_db_connection, drop_tables, insert_vulns, db_query
-from .dbconfig import create_vulns_table
+from .database import new_db_connection, drop_tables, db_query, insert_scanid
+from .dbconfig import create_scanid_table
 
 
 def tenb_connection():
@@ -28,19 +28,15 @@ def tenb_connection():
 def parse_data(scan_id):
     sc = tenb_connection()
     database = r"ivan.db"
-    vuln_conn = new_db_connection(database)
-    vuln_conn.execute('pragma journal_mode=wal;')
-    vuln_conn.execute('pragma cashe_size=-10000')
-    vuln_conn.execute('pragma synchronous=OFF')
+    scanid_conn = new_db_connection(database)
+    scanid_conn.execute('pragma journal_mode=wal;')
+    scanid_conn.execute('pragma cashe_size=-10000')
+    scanid_conn.execute('pragma synchronous=OFF')
 
-    with vuln_conn:
+    with scanid_conn:
         try:
-            if scan_id:
-                click.echo("\nPulling Vuln Data from scan {} from Tenable.sc\n".format(scan_id))
-                scan_list = sc.analysis.vulns(tools='vulndetails', scan_id=scan_id)
-            else:
-                click.echo("\nPulling All Vulnerability Data from Tenable.sc\n")
-                scan_list = sc.analysis.vulns(tools='vulndetails')
+            click.echo("\nPulling Vuln Data from scan {} from Tenable.sc\n".format(scan_id))
+            scan_list = sc.analysis.vulns(tools='vulndetails', scan_id=scan_id)
 
             for vulns in scan_list:
                 # create a blank list to append asset details
@@ -230,7 +226,7 @@ def parse_data(scan_id):
                         vuln_list.append(" ")
 
                     try:
-                        insert_vulns(vuln_conn, vuln_list)
+                        insert_scanid(scanid_conn, vuln_list)
                     except Error as e:
                         click.echo(e)
                 except IndexError:
@@ -238,11 +234,11 @@ def parse_data(scan_id):
         except TypeError:
             click.echo("Your Export has no data.  It may have expired")
 
-    vuln_conn.close()
+    scanid_conn.close()
     sc.logout()
 
 
-def vuln_export(scan_id):
+def scanid_export(scan_id):
     start = time.time()
 
     database = r"ivan.db"
@@ -250,16 +246,16 @@ def vuln_export(scan_id):
     drop_conn.execute('pragma journal_mode=wal;')
 
     # Right now we just drop the table.  Eventually I will actually update the database
-    drop_tables(drop_conn, 'vulns')
+    drop_tables(drop_conn, 'scanid')
 
-    create_vulns_table()
+    create_scanid_table()
 
     parse_data(scan_id=scan_id)
 
     click.echo("\nCreating a few indexes to make queries faster.\n")
-    db_query("CREATE INDEX vulns_plugin_id on vulns (plugin_id);")
-    db_query("CREATE INDEX vulns_ports on vulns (port);")
-    db_query("CREATE INDEX vulns_cves on vulns (cves);")
+    db_query("CREATE INDEX scanid_plugin_id on scanid (plugin_id);")
+    db_query("CREATE INDEX scanid_ports on scanid (port);")
+    db_query("CREATE INDEX scanid_cves on scanid (cves);")
     end = time.time()
 
     click.echo("Script took: {}".format(end-start))

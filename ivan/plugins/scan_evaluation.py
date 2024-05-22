@@ -3,24 +3,39 @@ from .database import db_query
 import csv
 
 
-def grab_hop_count(uuid):
+def grab_hop_count(table, ipaddy):
+
+    if table != "vulns":
+        # Set the table properly
+        table = "scanid"
     # grab the output of 10287 - Trace Route
     try:
-        hop_count_data = db_query("select output from vulns where asset_uuid='{}' and plugin_id='10287';".format(uuid))
+        hop_count_data = db_query("select output from {} where asset_ip='{}' and plugin_id='10287';".format(table, ipaddy))
         # Send the raw data back
-        return hop_count_data
+        hopcount = hop_count_data[0][-1].split(" ")[-1]
+
+        if "way" in hopcount:
+            hopcount = hop_count_data[0][-1].split(" ")[-7]
+            if "an" in hopcount:
+                print("Error")
+                return "error"
+
+            return hopcount
+        else:
+            return hopcount
     except:
         return "none"
 
 
-def evaluate_a_scan():
-    # Since no scanid was provided we assume the user wants stats on all scans
+def evaluate_a_scan(table):
     click.echo("*" * 100)
     click.echo("\nThis command uses the 19506 plugin data found in the navi.db\n"
                "Run a navi update command to refresh the database.\n")
     click.echo("*" * 100)
     # Pull all 19506 Plugins from the DB
-    plugin_data = db_query("select asset_ip, asset_uuid, output from vulns where plugin_id='19506';")
+    if table != "vulns":
+        table = "scanid"
+    plugin_data = db_query("select asset_ip, output from {} where plugin_id='19506';".format(table))
 
     # Set some dicts for organizing Data
     scan_policy_dict = {}
@@ -28,10 +43,11 @@ def evaluate_a_scan():
     scan_name_dict = {}
     scanner_list = []
     # Open a CSV for export
-    with open('evaluate.csv', mode='w', encoding='utf-8', newline="") as csv_file:
+    with open('evaluate-{}.csv'.format(table), mode='w', encoding='utf-8', newline="") as csv_file:
         agent_writer = csv.writer(csv_file, delimiter=',', quotechar='"')
 
-        header_list = ["Asset IP Address", "Asset UUID", "Scan Name", "Scan Policy", "Scanner IP", "Scan Time", "Max Checks", "Max Hosts", "Minutes", "RTT", "Hop Count"]
+        header_list = ["Asset IP Address", "Scan Name", "Scan Policy", "Scanner IP", "Scan Time", "Max Checks",
+                       "Max Hosts", "Minutes", "RTT", "Hop Count"]
 
         # Write the header to the csv
         agent_writer.writerow(header_list)
@@ -69,8 +85,8 @@ def evaluate_a_scan():
         for vulns in plugin_data:
             plugin_dict = {}
 
-            # Output is the third item in the tuple from the DB
-            plugin_output = vulns[2]
+            # Output is the second item in the tuple from the DB
+            plugin_output = vulns[1]
 
             # split the output by return
             parsed_output = plugin_output.split("\n")
@@ -87,7 +103,8 @@ def evaluate_a_scan():
             except KeyError:
                 intial_seconds = 'unknown'
 
-            # For an unknown reason, the scanner will print unknown for some assets leaving no way to calculate the time.
+            # For an unknown reason, the scanner will print unknown
+            # for some assets leaving no way to calculate the time.
             if intial_seconds != 'unknown':
                 try:
                     # Numerical value in seconds parsed from the plugin
@@ -135,7 +152,7 @@ def evaluate_a_scan():
                     try:
                         # Grab the last line in the Trace route Plugin output
                         # Split on the space and grab the numerical value.
-                        hopcount = grab_hop_count(vulns[0])[0][-1].split(" ")[-1]
+                        hopcount = grab_hop_count(table, vulns[0])
                     except IndexError:
                         hopcount = "Unknown"
 

@@ -8,5 +8,6 @@ def update():
 
 
 @update.command(help="Update the vulns Table")
-def vulns():
-    vuln_export()
+@click.option('--scan_id', default=None, help='Download only a specific scan')
+def vulns(scan_id):
+    vuln_export(scan_id=scan_id)

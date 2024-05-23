@@ -1,4 +1,5 @@
 import click
+import arrow
 from .scan_evaluation import evaluate_a_scan
 from .sc_vuln_export import tenb_connection
 from .scanidv_vuln_export import tenb_connection, scanid_export
@@ -43,8 +44,6 @@ def start(scan_id, targets):
 def details(scan_id):
     sc = tenb_connection()
     scan_details = sc.scan_instances.details(id=scan_id)
-    import pprint
-    #pprint.pprint(scan_details)
 
     click.echo("\nScan Details")
     click.echo("-" * 75)
@@ -53,7 +52,7 @@ def details(scan_id):
     # Grab scan data
     scan_duration = scan_details['scanDuration']
     scanned_ips = scan_details['scannedIPs']
-    start_time = scan_details['startTime']
+    start_time = arrow.get(float(scan_details['startTime']))
     current_status = scan_details['status']
     total_checks = scan_details['totalChecks']
     total_ips = scan_details['totalIPs']
@@ -66,7 +65,7 @@ def details(scan_id):
     average = (int(scan_duration) / int(scanned_size)) / 60
 
     click.echo("{:40s}{}".format("Current Status: ", current_status))
-    click.echo("{:40s}{}".format("Scanned Start time: ", start_time))
+    click.echo("{:40s}{}".format("Scanned Start time: ", start_time.format("MM-DD-YYYY HH:mm:ss")))
     click.echo("{:40s}{}{}".format("Scan Duration: ", scan_duration, " Seconds"))
 
     click.echo("-" * 50)
@@ -127,13 +126,13 @@ def details(scan_id):
     click.echo()
 
     import_duration = scan_details['importDuration']
-    import_finish = scan_details['importFinish']
-    import_start = scan_details['importStart']
+    import_finish = arrow.get(float(scan_details['importFinish']))
+    import_start = arrow.get(float(scan_details['importStart']))
     import_status = scan_details['importStatus']
 
     click.echo("{:40s}{}{}".format("Import Duration", import_duration, " Seconds"))
-    click.echo("{:40s}{}".format("Import Start Time", import_start))
-    click.echo("{:40s}{}".format("Import Finish Time", import_finish))
+    click.echo("{:40s}{}".format("Import Start Time", import_start.format("MM-DD-YYYY HH:mm:ss")))
+    click.echo("{:40s}{}".format("Import Finish Time", import_finish.format("MM-DD-YYYY HH:mm:ss")))
     click.echo("{:40s}{}".format("Import Status", import_status))
     click.echo("-" * 50)
     click.echo("-" * 50)

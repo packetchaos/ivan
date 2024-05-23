@@ -3,6 +3,7 @@ from .database import new_db_connection, db_query
 import textwrap
 from tenable.sc import TenableSC
 import arrow
+import datetime
 
 
 def compare_dates(given_date):
@@ -129,10 +130,14 @@ def instances():
 
         for scanid in usable_list:
             scan = sc.scan_instances.details(id=scanid)
+            start_time = arrow.get(float(scan['startTime']))
+            finish_time = arrow.get(float(scan['finishTime']))
+
             try:
                 click.echo("{:60s} {:10s} {:15s} {:20s} {:20s} {}".format(str(scan['name']), str(scan['id']),
-                                                                          str(scan['status']), str(scan['startTime']),
-                                                                          str(scan['finishTime']),
+                                                                          str(scan['status']),
+                                                                          str(start_time.format('MM-DD-YYYY HH:mm:ss')),
+                                                                          str(finish_time.format('MM-DD-YYYY HH:mm:ss')),
                                                                           str(scan['progress']['scannedSize'])))
             except KeyError:
                 click.echo("{:60s} {:10s} {:30s} {}".format(str(scan['name']), str(scan['id']),

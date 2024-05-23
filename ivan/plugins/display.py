@@ -67,10 +67,12 @@ def scans():
 
         for scan in sc.scans.list()['usable']:
             try:
-                click.echo("{:60s} {:10s} {:30s} {}".format(str(scan['name']), str(scan['id']), str(scan['status']),
+                click.echo("{:60s} {:10s} {:30s} {}".format(str(scan['name']), str(scan['id']),
+                                                            str(scan['status']),
                                                             str(scan['uuid'])))
             except KeyError:
-                click.echo("{:60s} {:10s} {:30s} {}".format(str(scan['name']), str(scan['id']), str(scan['status']),
+                click.echo("{:60s} {:10s} {:30s} {}".format(str(scan['name']), str(scan['id']),
+                                                            str(scan['status']),
                                                             "No UUID"))
         click.echo()
     except AttributeError:
@@ -85,7 +87,8 @@ def users():
         click.echo("\n{:34s} {:40s} {:40s} {:10s} {}".format("User Name", "Login Email", "UUID", "ID", "Locked"))
         click.echo("-" * 150)
         for user in sc.users.list():
-            click.echo("{:34s} {:40s} {:40s} {:10s} {}".format(str(user["username"]), str(user["email"]), str(user['uuid']), str(user['id']), str(user['locked'])))
+            click.echo("{:34s} {:40s} {:40s} {:10s} {}".format(str(user["username"]), str(user["email"]),
+                                                               str(user['uuid']), str(user['id']), str(user['locked'])))
         click.echo()
     except AttributeError:
         click.echo("\nCheck your permissions or your API keys\n")
@@ -113,8 +116,8 @@ def assets():
         click.echo("\nCheck your permissions or your API keys\n")
 
 
-@display.command(help="Display Scans")
-def instance():
+@display.command(help="Display Scan Instances")
+def instances():
     sc = tenb_connection()
     try:
         click.echo("\n{:60s} {:10s} {:15s} {:20s} {:20s} {}".format("Scan Name", "Scan ID", "Status",
@@ -128,11 +131,12 @@ def instance():
             scan = sc.scan_instances.details(id=scanid)
             try:
                 click.echo("{:60s} {:10s} {:15s} {:20s} {:20s} {}".format(str(scan['name']), str(scan['id']),
-                                                            str(scan['status']), str(scan['startTime']),
-                                                            str(scan['finishTime']), str(scan['progress']['scannedSize'])))
+                                                                          str(scan['status']), str(scan['startTime']),
+                                                                          str(scan['finishTime']),
+                                                                          str(scan['progress']['scannedSize'])))
             except KeyError:
-                click.echo("{:60s} {:10s} {:30s} {}".format(str(scan['name']), str(scan['id']), str(scan['status']),
-                                                            "No UUID"))
+                click.echo("{:60s} {:10s} {:30s} {}".format(str(scan['name']), str(scan['id']),
+                                                            str(scan['status']), "No UUID"))
         click.echo()
     except AttributeError:
         click.echo("\nCheck your permissions or your API keys\n")

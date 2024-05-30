@@ -130,3 +130,35 @@ def create_plugins_table():
     app_conn.execute('pragma journal_mode=wal;')
 
     create_table(app_conn, create_plugins)
+
+
+def create_software_table():
+    database = r"ivan.db"
+    soft_conn = new_db_connection(database)
+    soft_table = """CREATE TABLE IF NOT EXISTS software (
+                        asset_uuid text,
+                        software_string text);"""
+    soft_conn.execute('pragma journal_mode=wal;')
+    create_table(soft_conn, soft_table)
+
+
+def create_passwords_table():
+    database = r"ivan.db"
+    ssh_conn = new_db_connection(database)
+    ssh_table = """CREATE TABLE IF NOT EXISTS ssh (
+                            username text,
+                            password text
+                            );"""
+    create_table(ssh_conn, ssh_table)
+
+
+def create_epss_table():
+        database = r"navi.db"
+        epss_conn = new_db_connection(database)
+        create_score_table = """CREATE TABLE IF NOT EXISTS epss (
+                            cve text PRIMARY KEY,
+                            epss_value text,
+                            percentile text
+                            );"""
+        epss_conn.execute('pragma journal_mode=wal;')
+        create_table(epss_conn, create_score_table)

@@ -128,3 +128,25 @@ def insert_scanid(conn, scanid):
     cur.execute('pragma journal_mode=wal;')
     cur.execute(sql, scanid)
 
+
+def insert_software(conn, software):
+    sql = '''INSERT or IGNORE into software(software_string, asset_uuid) VALUES(?,?)'''
+    cur = conn.cursor()
+    cur.execute('pragma journal_mode=wal;')
+    cur.execute(sql, software)
+
+
+def update_software(conn, software, asset_list):
+    cur = conn.cursor()
+    cur.execute('pragma journal_mode=wal;')
+    cur.execute('UPDATE software SET asset_uuid=? WHERE software_string=?', (str()))
+
+
+def insert_epss(conn2, epss_data):
+    sql_epss = '''INSERT or IGNORE into epss(
+                            cve,
+                            epss_value,
+                            percentile) VALUES(?,?,?)'''
+    epss_cur = conn2.cursor()
+    epss_cur.execute('pragma journal_mode=wal;')
+    epss_cur.execute(sql_epss, epss_data)

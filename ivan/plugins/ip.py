@@ -106,16 +106,12 @@ def cves_by_uuid(uuid):
 @click.option('-d', is_flag=True, help="Scan Detail: 19506 plugin output")
 @click.option('-software', is_flag=True, help="Find software installed on Unix(22869) of windows(20811) hosts")
 @click.option('-outbound', is_flag=True, help="outbound connections found by nnm")
-@click.option('-exploit', is_flag=True, help="Display Solution, Description for each Exploit")
-@click.option('-critical', is_flag=True, help="Display Plugin Output for each Critical Vuln")
-@click.option('-details', is_flag=True, help="Details on an Asset: IP, UUID, Vulns, etc")
 @click.option('-vulns', is_flag=True, help="Display all vulnerabilities and their plugin IDs")
 @click.option('-info', is_flag=True, help="Display all info plugins and their IDs")
 @click.option('-cves', is_flag=True, help="Display all cves found on the asset")
-@click.option('-compliance', '-audits', is_flag=True, help="Display all Compliance info for a given asset UUID")
 @click.pass_context
-def ip(ctx, ipaddr, plugin, n, p, t, o, c, s, r, patches, d, software, outbound, exploit, critical, details, vulns,
-       info, cves, compliance):
+def ip(ctx, ipaddr, plugin, n, p, t, o, c, s, r, patches, d, software, outbound, vulns,
+       info, cves):
 
     if d:
         click.echo('\nScan Detail')

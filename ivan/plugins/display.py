@@ -145,3 +145,16 @@ def instances():
         click.echo()
     except AttributeError:
         click.echo("\nCheck your permissions or your API keys\n")
+
+
+@display.command(help="Display Query IDs")
+def query():
+    sc = tenb_connection()
+    try:
+        click.echo("\n{:20s} {:45s} {}".format("Query ID", "Query Name", "Description"))
+        click.echo("-" * 150)
+        for qid in sc.queries.list()['usable']:
+            click.echo("\n{:20s} {:45s} {}".format(qid['id'], qid['name'], qid['description']))
+        click.echo()
+    except KeyError:
+        click.echo("Something went wrong")

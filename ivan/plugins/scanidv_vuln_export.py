@@ -25,7 +25,7 @@ def tenb_connection():
             return sc
 
 
-def parse_data(scan_id):
+def parse_data(scan_id, limit):
     sc = tenb_connection()
     database = r"ivan.db"
     scanid_conn = new_db_connection(database)
@@ -36,7 +36,7 @@ def parse_data(scan_id):
     with scanid_conn:
         try:
             click.echo("\nPulling Vuln Data from scan {} from Tenable.sc\n".format(scan_id))
-            scan_list = sc.analysis.vulns(tools='vulndetails', scan_id=scan_id)
+            scan_list = sc.analysis.vulns(tools='vulndetails', scan_id=scan_id, limit=limit)
 
             for vulns in scan_list:
                 # create a blank list to append asset details
@@ -238,7 +238,7 @@ def parse_data(scan_id):
     sc.logout()
 
 
-def scanid_export(scan_id):
+def scanid_export(scan_id, limit):
     start = time.time()
 
     database = r"ivan.db"
@@ -250,7 +250,7 @@ def scanid_export(scan_id):
 
     create_scanid_table()
 
-    parse_data(scan_id=scan_id)
+    parse_data(scan_id=scan_id, limit=limit)
 
     click.echo("\nCreating a few indexes to make queries faster.\n")
     db_query("CREATE INDEX scanid_plugin_id on scanid (plugin_id);")

@@ -10,8 +10,10 @@ def update():
 
 @update.command(help="Update the vulns Table")
 @click.option('--scan_id', default=None, help='Download only a specific scan')
-def vulns(scan_id):
-    vuln_export(scan_id=scan_id)
+@click.option('--query_id', default=None, help='A T.sc Query ID to limit what is downloaded')
+@click.option('--limit', default=200, help='Limit the pages in a response')
+def vulns(scan_id, query_id, limit):
+    vuln_export(scan_id=scan_id, query_id=query_id, limit=limit)
     
 
 @update.command(help="Populate Navi DB with EPSS data")

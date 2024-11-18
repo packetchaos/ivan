@@ -1,0 +1,7 @@
+Click>=7.0
+requests>=2.26.0
+flask>=1.1.1
+IPy>=1.0
+pytenable>=1.4.3
+arrow>=0.17.0
+typing-extensions>=4.0.1

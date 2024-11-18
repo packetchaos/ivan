@@ -1,0 +1,12 @@
+Name,IP,Tag,Desc
+AKD - Plant - AV_Crestron/Teams,10.40.47.0/24,Solarwinds,Conference room hardware subnet.
+AKD - Plant - Camera,10.40.90.0/24,Solarwinds,Plant camera subnet.
+AKD - Plant - Common Line,10.40.180.0/24,Solarwinds,Hostess PLC's for common line.
+AKD - Plant - DMZ SCADA,10.40.94.0/23,Solarwinds,Hostess SCADA DMZ.
+AKD - Plant - Door Access,10.40.60.0/24,Solarwinds,Avigilon Security Door Access Subnet.
+AKD - Plant - Equipment,10.40.80.0/24,Solarwinds,Hostess heavy floor equipment subnet.
+AKD - Plant - Guest Wireless,10.40.16.0/22,Solarwinds,Plant guest network.
+AKD - Plant - Hostess Floor,10.40.20.0/24,Solarwinds,Hostess plant floor PCs and Printers.
+AKD - Plant - Hostess Servers,10.40.70.0/24,Solarwinds,Legacy Hostess servers subnet.
+AKD - Plant - HVAC,10.40.44.0/24,Solarwinds,HVAC subnet range.
+AKD - Plant - iLO,10.40.3.0/24,Solarwinds,HP iLO server management subnet.

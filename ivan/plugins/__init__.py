@@ -10,6 +10,7 @@ from .ssh import ssh
 from .mail import mail
 from .software import software
 from .push import push
+from .create import create
 
 
 def plugin_loader(group):
@@ -25,3 +26,4 @@ def plugin_loader(group):
     group.add_command(mail)
     group.add_command(smtp)
     group.add_command(software)
+    group.add_command(create)

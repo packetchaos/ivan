@@ -158,3 +158,17 @@ def query():
         click.echo()
     except KeyError:
         click.echo("Something went wrong")
+
+
+@display.command(help="Display Static Asset Lists")
+def static():
+    import pprint
+    sc = tenb_connection()
+    click.echo("\n{:6} {:45} {:45}".format("ID", "Name", "Defined IPs"))
+    click.echo("-" * 150)
+    for alist in sc.asset_lists.list()['usable']:
+        if alist['type'] == 'static':
+            click.echo("{:6} {:45} {:45}".format(alist['id'], alist['name'],
+                                                 str(sc.asset_lists.details(alist['id'])['typeFields']['definedIPs'])))
+
+    click.echo("\n")

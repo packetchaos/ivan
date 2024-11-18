@@ -11,6 +11,7 @@ from .display import display
 def create():
     pass
 
+
 def tenb_connection():
     database = r"ivan.db"
     conn = new_db_connection(database)
